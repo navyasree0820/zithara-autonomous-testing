@@ -1,0 +1,21 @@
+ID	Course_Topic	Zithara_Deliverable	Repo	Phase	Priority	Status	Owner	GO_NO_GO_Dependency	Notes
+C01	Agent hypothesis / DoD	AGENTS.md verify loop	zithara-autonomous-testing	0	P0	In progress		G1-G7	
+C02	Instructions	CLAUDE.md locator+waiting rules	zithara-autonomous-testing	0	P0	In progress		
+C03	Cursor rules/skills	verify-suite skill + FE rule	both	0	P0	In progress		
+C04	Playwright config/projects	beta + app-smoke projects	zithara-autonomous-testing	0	P0	In progress	G1	
+C05	Storage state auth	auth.setup + .auth storage	zithara-autonomous-testing	0	P0	In progress	G3	BLOCKER until creds
+C06	Fixtures/tags	authedPage + @smoke @critical	zithara-autonomous-testing	1	P0	In progress	G2	
+C07	Smoke suite	login+dashboard+shell	zithara-autonomous-testing	1	P0	In progress	G3	
+C08	Critical suite	campaign/templates/contacts/segmentation/draft campaign	zithara-autonomous-testing	1	P0	In progress	G5	
+C09	Failure dossiers + Supabase	uploader + schema	zithara-autonomous-testing	1	P0	In progress	G7	
+C10	CI wiring	scheduled + optional PR	ci	1	P0	In progress	G4	
+C11	A11y gate	axe on smoke routes	zithara-autonomous-testing	2	P1	Not started		
+C12	Hybrid API+UI	seed helpers	zithara-autonomous-testing	2	P1	Not started		
+C13	Custom MCP	run_smoke/get_failures	zithara-autonomous-testing	2	P1	In progress	C09	
+C14	Bugbot tuning	FE rules	campaigns-frontend	2	P1	In progress		
+C15	Post-deploy app smoke	@smoke on app.zithara.com	ci	2	P1	In progress	G1	
+C16	HAR isolation	third-party routes	zithara-autonomous-testing	3	P2	Not started		
+C17	Visual regression	dashboard+summary	zithara-autonomous-testing	3	P2	Not started		
+C18	Performance budgets	dashboard only	zithara-autonomous-testing	3	P3	Not started		
+C19	Static extras	gitleaks/hooks	both	2	P1	Not started		
+C20	Capstone loop	agent end-to-end demo	all	3	P1	Not started	C07-C14	

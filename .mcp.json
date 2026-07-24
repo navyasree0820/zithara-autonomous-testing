@@ -1,0 +1,9 @@
+{
+  "mcpServers": {
+    "zithara-playwright-verify": {
+      "command": "node",
+      "args": ["mcp/server.mjs"],
+      "cwd": "${workspaceFolder}"
+    }
+  }
+}

@@ -1,0 +1,11 @@
+Item	Type	Required_For	Status	Owner	Cost_Notes	Link
+zithara-autonomous-testing remote	GitHub	All	Missing		
+Playwright CI runner	Compute	C10	Scaffolded	GitHub Actions	
+E2E secrets	Vault	G4	Documented in .env.example		
+Beta test merchant	Data	G2	Pending		
+OTP bypass / session API	Backend	G3	Pending		
+Supabase project	DB+Storage	G7	Schema ready in supabase/migrations		
+Dossier storage bucket	Storage	C09	Name: playwright-dossiers		
+Slack webhook	Alerting	Optional	Not started		
+Bugbot	Review	C14	FE cursor rule added		
+Cleanup cron	Backend job	G5	Policy documented		

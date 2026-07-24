@@ -1,0 +1,44 @@
+name: App Post-Deploy Smoke
+on:
+  workflow_dispatch:
+  # Call from deploy pipeline:
+  # gh workflow run "App Post-Deploy Smoke"
+  repository_dispatch:
+    types: [app-deployed]
+
+jobs:
+  app-smoke:
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install chromium --with-deps
+      - name: Smoke against app.zithara.com
+        env:
+          CI: "1"
+          E2E_TRIGGER: ci
+          E2E_BASE_URL_BETA: ${{ vars.E2E_BASE_URL_BETA || 'https://beta.zithara.com' }}
+          E2E_BASE_URL_APP: ${{ vars.E2E_BASE_URL_APP || 'https://app.zithara.com' }}
+          E2E_AUTH_API_BASE_URL: ${{ secrets.E2E_AUTH_API_BASE_URL }}
+          E2E_USER: ${{ secrets.E2E_USER }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+          E2E_OTP: ${{ secrets.E2E_OTP }}
+          E2E_ID_TOKEN: ${{ secrets.E2E_ID_TOKEN }}
+          E2E_REFRESH_TOKEN: ${{ secrets.E2E_REFRESH_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run test:app-smoke
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: app-smoke-report
+          path: |
+            playwright-report/
+            dossiers/
+            test-results/
+          retention-days: 14

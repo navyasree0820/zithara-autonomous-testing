@@ -1,0 +1,7 @@
+Week	Outcome	Exit_Criteria
+0	Gates G1-G5 G7 decided	All GO or explicit NO-GO owners
+1	Repo bootstrap + auth.setup + smoke on beta	npm run test:smoke green headless
+2	Critical list pages + Supabase dossiers + CI schedule	Red build produces dossier row
+3	Campaign draft flow + FE testids + Bugbot rule	@critical green; agent DoD documented
+4	App smoke post-deploy + MCP verify tools	app @smoke in deploy pipeline
+5+	A11y/HAR/visual/nightly expansion	Flake rate < 5% on critical

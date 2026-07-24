@@ -1,0 +1,14 @@
+---
+description: Playwright locator and waiting rules for the Zithara testing agent
+globs:
+  - tests/**/*.ts
+alwaysApply: true
+---
+
+# Playwright rules
+
+- Prefer `getByRole`, then `getByLabel` / `getByText`. Use `getByTestId` only when semantics do not exist.
+- Never use raw CSS or XPath selectors in specs.
+- Never use `page.waitForTimeout` or `waitForLoadState('networkidle')`.
+- Prefix created entities with `e2e-`. Never send live campaigns from tests.
+- A task is not done until `npm run test:smoke` (and `test:critical` when relevant) pass, or a GO/NO-GO blocker is explicitly named.

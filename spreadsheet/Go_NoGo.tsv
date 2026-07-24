@@ -1,0 +1,8 @@
+Gate_ID	Gate	GO_Criteria	Evidence	Status	Owner	Due	Blocker_Notes
+G1	Environments	beta + app reachable; API hosts documented	npm run gates		
+G2	Test merchant	Dedicated tenant + broad CASL user	Merchant id + email		
+G3	Auth automation	OTP bypass OR mint-session / cookie inject works in Playwright	storageState file created headless		
+G4	Secrets	CI secrets set; .gitignore for .auth and .env	Secret names in .env.example		
+G5	Data safety	e2e- prefix + cleanup policy agreed	docs/GO_NO_GO.md		
+G6	Selector contract	FE commits to testids for wizard/import	Ticket link		
+G7	Supabase sink	Project + tables + bucket ready	Connection test from CI		
