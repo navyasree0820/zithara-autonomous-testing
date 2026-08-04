@@ -1,0 +1,31 @@
+{
+  "name": "zithara-autonomous-testing",
+  "version": "1.0.0",
+  "description": "Self-testing Playwright agent harness for campaigns-frontend (beta.zithara.com / app.zithara.com)",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "gates": "node scripts/check-gates.mjs",
+    "test": "playwright test --project=beta-public --project=beta-chromium",
+    "test:smoke": "playwright test --project=beta-public --project=beta-chromium --grep @smoke",
+    "test:critical": "playwright test --project=beta-chromium --grep @critical",
+    "test:nightly": "playwright test --project=beta-chromium --grep @nightly",
+    "test:app-smoke": "playwright test --project=app-smoke",
+    "test:ui": "playwright test --project=beta-public --project=beta-chromium --ui",
+    "report": "playwright show-report",
+    "mcp": "node mcp/server.mjs"
+  },
+  "keywords": [
+    "playwright",
+    "e2e",
+    "zithara"
+  ],
+  "license": "ISC",
+  "devDependencies": {
+    "@playwright/test": "^1.61.1",
+    "dotenv": "^16.4.7"
+  },
+  "dependencies": {
+    "@supabase/supabase-js": "^2.49.1"
+  }
+}

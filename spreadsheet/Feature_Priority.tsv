@@ -1,0 +1,13 @@
+Rank	Feature	Route	Phase	Tag	Risk	Needs_testid	Send_side_effects	Start_Now
+1	Login + OTP path	/login	1	@smoke	High	Maybe	No	YES
+2	Dashboard shell	/dashboard	1	@smoke	Med	No	No	YES
+3	Campaigns list	/campaign	1	@critical	Med	No	No	YES
+4	WA templates list	/templates/whatsapp-templates	1	@critical	Med	No	No	YES
+5	Contacts list	/contacts/all	1	@critical	Med	No	No	YES
+6	Segmentation list	/segmentation	1	@critical	Med	No	No	YES
+7	Create campaign draft	/campaign/create-campaign/*	1	@critical	High	YES	Draft only	YES
+8	CSV import wizard	/import/new	2	@critical	High	YES	No prod send	LATER
+9	Rules list	/rules	2	@critical	Med	No	No	LATER
+10	Reports open	/reports	2	@nightly	High	Maybe	No	LATER
+11	Chat inbox load	/chat-agent/inbox	2	@nightly	High	Maybe	No	LATER
+12	WhatsApp bot builder	/whatsapp-bot	3	@nightly	Very High	YES	No	NO

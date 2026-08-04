@@ -1,0 +1,126 @@
+name: Playwright Tests
+on:
+  push:
+    branches: [main, master]
+  pull_request:
+    branches: [main, master]
+  schedule:
+    # Daily beta critical suite 02:30 UTC
+    - cron: "30 2 * * *"
+  workflow_dispatch:
+    inputs:
+      suite:
+        description: "Suite to run"
+        required: true
+        default: "critical"
+        type: choice
+        options:
+          - smoke
+          - critical
+          - nightly
+
+jobs:
+  gates:
+    timeout-minutes: 10
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - name: Gate checks
+        env:
+          E2E_BASE_URL_BETA: ${{ vars.E2E_BASE_URL_BETA || 'https://beta.zithara.com' }}
+          E2E_BASE_URL_APP: ${{ vars.E2E_BASE_URL_APP || 'https://app.zithara.com' }}
+          E2E_USER: ${{ secrets.E2E_USER }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+          E2E_ID_TOKEN: ${{ secrets.E2E_ID_TOKEN }}
+          E2E_REFRESH_TOKEN: ${{ secrets.E2E_REFRESH_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run gates
+
+  test-beta:
+    needs: gates
+    timeout-minutes: 60
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install chromium --with-deps
+      - name: Run suite
+        env:
+          CI: "1"
+          E2E_TRIGGER: ${{ github.event_name == 'schedule' && 'nightly' || 'ci' }}
+          E2E_BASE_URL_BETA: ${{ vars.E2E_BASE_URL_BETA || 'https://beta.zithara.com' }}
+          E2E_BASE_URL_APP: ${{ vars.E2E_BASE_URL_APP || 'https://app.zithara.com' }}
+          E2E_AUTH_API_BASE_URL: ${{ secrets.E2E_AUTH_API_BASE_URL }}
+          E2E_USER: ${{ secrets.E2E_USER }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+          E2E_OTP: ${{ secrets.E2E_OTP }}
+          E2E_ID_TOKEN: ${{ secrets.E2E_ID_TOKEN }}
+          E2E_REFRESH_TOKEN: ${{ secrets.E2E_REFRESH_TOKEN }}
+          E2E_EXPIRY_ISO: ${{ secrets.E2E_EXPIRY_ISO }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+          SKIP_CAMPAIGN_DRAFT: ${{ vars.SKIP_CAMPAIGN_DRAFT }}
+        run: |
+          SUITE="${{ github.event.inputs.suite || 'critical' }}"
+          if [ "${{ github.event_name }}" = "schedule" ]; then SUITE=critical; fi
+          if [ "$SUITE" = "smoke" ]; then npm run test:smoke
+          elif [ "$SUITE" = "nightly" ]; then npm run test:nightly
+          else npm run test:critical
+          fi
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-beta
+          path: |
+            playwright-report/
+            dossiers/
+            test-results/
+          retention-days: 14
+
+  app-smoke:
+    if: github.event_name == 'workflow_dispatch' || github.event_name == 'schedule'
+    needs: gates
+    timeout-minutes: 30
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: lts/*
+          cache: npm
+      - run: npm ci
+      - run: npx playwright install chromium --with-deps
+      - name: App smoke
+        env:
+          CI: "1"
+          E2E_TRIGGER: ci
+          E2E_BASE_URL_BETA: ${{ vars.E2E_BASE_URL_BETA || 'https://beta.zithara.com' }}
+          E2E_BASE_URL_APP: ${{ vars.E2E_BASE_URL_APP || 'https://app.zithara.com' }}
+          E2E_AUTH_API_BASE_URL: ${{ secrets.E2E_AUTH_API_BASE_URL }}
+          E2E_USER: ${{ secrets.E2E_USER }}
+          E2E_PASSWORD: ${{ secrets.E2E_PASSWORD }}
+          E2E_OTP: ${{ secrets.E2E_OTP }}
+          E2E_ID_TOKEN: ${{ secrets.E2E_ID_TOKEN }}
+          E2E_REFRESH_TOKEN: ${{ secrets.E2E_REFRESH_TOKEN }}
+          SUPABASE_URL: ${{ secrets.SUPABASE_URL }}
+          SUPABASE_SERVICE_ROLE_KEY: ${{ secrets.SUPABASE_SERVICE_ROLE_KEY }}
+        run: npm run test:app-smoke
+      - uses: actions/upload-artifact@v4
+        if: ${{ !cancelled() }}
+        with:
+          name: playwright-report-app-smoke
+          path: |
+            playwright-report/
+            dossiers/
+            test-results/
+          retention-days: 14

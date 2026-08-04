@@ -1,0 +1,16 @@
+Table	Column	Type	Notes
+test_runs	id	uuid pk	
+test_runs	env	text	beta|app
+test_runs	trigger	text	local|ci|agent|nightly
+test_runs	status	text	passed|failed|aborted
+test_runs	passed	int	
+test_runs	failed	int	
+test_runs	git_sha	text	
+test_results	run_id	uuid fk	
+test_results	title	text	
+test_results	tags	text[]	
+test_results	status	text	
+test_failures	result_id	uuid fk	
+test_failures	trace_url	text	Supabase storage URL
+test_failures	screenshot_url	text	
+agent_actions	run_id	uuid fk	optional ROI
